@@ -7,6 +7,12 @@
  */
 
 #include "../btree.h"
+// #include "../btree.c"
+// #include "../test.c"
+// #include "../test_util.h"
+// #include "../test_util.c"
+// #include "stack.c"
+
 #include "stack.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -91,21 +97,16 @@ void bst_insert(bst_node_t **tree, char key, int value) {
         isLeft = false;
     }  
   }
-  if (isLeft)
-  {
-    prev->left = malloc(sizeof(bst_node_t));
-    cur = prev->left;
-  }
-  else
-  {
-    prev->right = malloc(sizeof(bst_node_t));
-    cur = prev->right;
-  }  
   //init new node
-  cur->left=NULL;
-  cur->right=NULL;
-  cur->key=key;
-  cur->value=value;
+  bst_node_t *new = malloc(sizeof(bst_node_t));
+  new->left=NULL;
+  new->right=NULL;
+  new->key=key;
+  new->value=value;
+  if (isLeft)
+    prev->left = new;
+  else  
+    prev->right = new;
   return;
 }
 
@@ -159,37 +160,41 @@ void bst_dispose(bst_node_t **tree) {
   bst_node_t *cur = tree[0];//current node
   bst_node_t *prev = tree[0];//previous node
   bool isLeft = false;
-
+  
   while (tree[0]!=NULL)
   {
     isLeft = false;
     cur=tree[0];//catch previous
-    while (cur->right!=NULL)
+    while (cur->left!=NULL || cur->right!=NULL)
     {
       if (cur->left != NULL) //do you have left child, go left
       {
         prev=cur;
         cur =cur->left;
         isLeft=true;//i am left
-        continue;
       }
-      if(cur->right!= NULL) //do you have right child, go right 
+      else if(cur->right!= NULL) //do you have right child, go right 
       {
         prev=cur;
         cur=cur->right;
         isLeft=false;//i am right
-        continue;
       }
-      free(cur);
-      if(isLeft)
-        prev->left=NULL;
-      else  
-        prev->right=NULL;
-      break; //start from the beginning
+      if (cur->left==NULL && cur->right==NULL)
+      {
+        free(cur);
+        if(isLeft)
+          prev->left=NULL;
+        else  
+          prev->right=NULL;
+        break; //start from the beginning
+      }
     }
     if (tree[0]->left==NULL && tree[0]->right==NULL)
-      *tree=NULL;
-    
+    {
+      free(tree[0]);
+      tree[0]=NULL;
+      break;
+    }  
   }
 
 }
@@ -264,3 +269,34 @@ void bst_leftmost_postorder(bst_node_t *tree, stack_bst_t *to_visit,
  */
 void bst_postorder(bst_node_t *tree) {
 }
+
+
+
+
+
+
+// int main(int argc, char const *argv[])
+// {
+//   const int base_data_count = 15;
+//   const char base_keys[] = {'H', 'D', 'L', 'B', 'F', 'J', 'N', 'A',
+//                             'C', 'E', 'G', 'I', 'K', 'M', 'O'};
+//   const int base_values[] = {8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 16};
+
+//   const int additional_data_count = 6;
+//   const char additional_keys[] = {'S', 'R', 'Q', 'P', 'X', 'Y', 'Z'};
+//   const int additional_values[] = {10, 10, 10, 10, 10, 10};
+
+//   const int traversal_data_count = 5;
+//   const char traversal_keys[] = {'D', 'B', 'A', 'C', 'E'};
+//   const int traversal_values[] = {1, 2, 3, 4, 5};
+  
+//   bst_node_t *test_tree = NULL;
+  
+//   bst_init(&test_tree);
+//   bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
+//   bst_print_tree(test_tree);
+//   printf("\n");                                                                
+//   bst_dispose(&test_tree);                                                     
+
+//   return 0;
+// }
