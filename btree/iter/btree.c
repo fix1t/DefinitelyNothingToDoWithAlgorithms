@@ -45,7 +45,24 @@ void bst_init(bst_node_t **tree) {
  * Funkciu implementujte iteratívne bez použitia vlastných pomocných funkcií.
  */
 bool bst_search(bst_node_t *tree, char key, int *value) {
-
+  bst_node_t *cur = tree;
+  while (cur!=NULL)
+  {
+    if(key == cur->key)//found nod with same key
+    {
+      *value = cur->value;
+      return true;
+    }
+    if (key < cur->key)//go left, value is lesser
+    {
+      cur=cur->left;
+      continue;
+    }
+    if (key > cur->key)//go right, value is greater
+    {
+        cur=cur->right;
+    }  
+  }
   return false;
 }
 
@@ -123,7 +140,26 @@ void bst_insert(bst_node_t **tree, char key, int value) {
  *
  * Funkciu implementujte iteratívne bez použitia vlastných pomocných funkcií.
  */
+
+/* checkout */
 void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
+  /* ak ma laveho potomka, attachne ho na previous. */
+  bst_node_t *cur = tree[0]->right;//current node
+  bst_node_t *prev = tree[0];//previous node
+  while (cur!=NULL)
+  {
+    prev=cur;//catch previous
+    if(cur->right != NULL)//found nod with same key
+      cur = cur->right;
+    else
+      break;
+  }
+  if (cur->left!=NULL)//cur is not a leaf
+    prev->right = cur->left;//attach to tree
+
+  target->key=cur->key;
+  target->value=cur->value;
+  free(cur);  
 }
 
 /*
@@ -209,6 +245,18 @@ void bst_dispose(bst_node_t **tree) {
  * vlastných pomocných funkcií.
  */
 void bst_leftmost_preorder(bst_node_t *tree, stack_bst_t *to_visit) {
+  bst_node_t *cur = tree;//current node
+  while (cur != NULL)
+  {
+    if (cur->left != NULL)
+    {
+      bst_print_node(cur);
+      stack_bst_push(to_visit,cur);
+      cur = cur->left;
+    }
+    else break;
+  }
+  
 }
 
 /*
@@ -220,6 +268,7 @@ void bst_leftmost_preorder(bst_node_t *tree, stack_bst_t *to_visit) {
  * zásobníku uzlov bez použitia vlastných pomocných funkcií.
  */
 void bst_preorder(bst_node_t *tree) {
+  
 }
 
 /*
