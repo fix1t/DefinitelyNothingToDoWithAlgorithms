@@ -20,6 +20,13 @@
  * možné toto detegovať vo funkcii.
  */
 void bst_init(bst_node_t **tree) {
+  tree[0]=NULL;
+  // tree[0] = malloc(sizeof(bst_node_t)); //allocate the tree
+  // tree[0]->value;
+  // tree[0]->key='\0';
+  // tree[0]->left=NULL;
+  // tree[0]->right=NULL;
+  return;
 }
 
 /*
@@ -32,6 +39,7 @@ void bst_init(bst_node_t **tree) {
  * Funkciu implementujte iteratívne bez použitia vlastných pomocných funkcií.
  */
 bool bst_search(bst_node_t *tree, char key, int *value) {
+
   return false;
 }
 
@@ -47,6 +55,58 @@ bool bst_search(bst_node_t *tree, char key, int *value) {
  * Funkciu implementujte iteratívne bez použitia vlastných pomocných funkcií.
  */
 void bst_insert(bst_node_t **tree, char key, int value) {
+  if (tree == NULL)//invalid
+    return;
+  if (tree[0] == NULL) //empty tree
+  {
+    tree[0] = malloc(sizeof(bst_node_t));
+    tree[0]->key = key;
+    tree[0]->value =value;
+    tree[0]->left=NULL;
+    tree[0]->right=NULL;
+    return;
+  }
+
+  bst_node_t *cur = tree[0];//current node
+  bst_node_t *prev = tree[0];//previous node
+  bool isLeft = false;
+
+  while (cur!=NULL)
+  {
+    prev=cur;//catch previous
+    if(key == cur->key)//found nod with same key
+    {
+      cur->value = value;
+      return;
+    }
+    if (key < cur->key)//go left, value is lesser
+    {
+      cur=cur->left;
+      isLeft = true;
+      continue;
+    }
+    if (key > cur->key)//go right, value is greater
+    {
+        cur=cur->right;
+        isLeft = false;
+    }  
+  }
+  if (isLeft)
+  {
+    prev->left = malloc(sizeof(bst_node_t));
+    cur = prev->left;
+  }
+  else
+  {
+    prev->right = malloc(sizeof(bst_node_t));
+    cur = prev->right;
+  }  
+  //init new node
+  cur->left=NULL;
+  cur->right=NULL;
+  cur->key=key;
+  cur->value=value;
+  return;
 }
 
 /*
@@ -91,6 +151,47 @@ void bst_delete(bst_node_t **tree, char key) {
  * vlastných pomocných funkcií.
  */
 void bst_dispose(bst_node_t **tree) {
+  if (tree==NULL)
+    return;
+  if (tree[0]==NULL)
+    return;
+
+  bst_node_t *cur = tree[0];//current node
+  bst_node_t *prev = tree[0];//previous node
+  bool isLeft = false;
+
+  while (tree[0]!=NULL)
+  {
+    isLeft = false;
+    cur=tree[0];//catch previous
+    while (cur->right!=NULL)
+    {
+      if (cur->left != NULL) //do you have left child, go left
+      {
+        prev=cur;
+        cur =cur->left;
+        isLeft=true;//i am left
+        continue;
+      }
+      if(cur->right!= NULL) //do you have right child, go right 
+      {
+        prev=cur;
+        cur=cur->right;
+        isLeft=false;//i am right
+        continue;
+      }
+      free(cur);
+      if(isLeft)
+        prev->left=NULL;
+      else  
+        prev->right=NULL;
+      break; //start from the beginning
+    }
+    if (tree[0]->left==NULL && tree[0]->right==NULL)
+      *tree=NULL;
+    
+  }
+
 }
 
 /*
