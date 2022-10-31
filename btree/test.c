@@ -32,8 +32,11 @@ ENDTEST
 
 TEST(test_tree_search_empty, "Search in an empty tree (A)")
 bst_init(&test_tree);
-int result;
-bst_search(test_tree, 'A', &result);
+int result = 0;
+if(!bst_search(test_tree, 'A', &result))
+{
+  printf("PASSED");
+}
 ENDTEST
 
 TEST(test_tree_insert_root, "Insert an item (H,1)")
@@ -45,8 +48,9 @@ ENDTEST
 TEST(test_tree_search_root, "Search in a single node tree (H)")
 bst_init(&test_tree);
 bst_insert(&test_tree, 'H', 1);
-int result;
-bst_search(test_tree, 'H', &result);
+int result = 0;
+if(bst_search(test_tree, 'H', &result))
+  printf("PASSED, %d\n",result);
 bst_print_tree(test_tree);
 ENDTEST
 
@@ -67,16 +71,20 @@ ENDTEST
 TEST(test_tree_search, "Search for an item deeper in the tree (A)")
 bst_init(&test_tree);
 bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
-int result;
-bst_search(test_tree, 'A', &result);
+int result = 0;
+if(bst_search(test_tree, 'A', &result))
+  printf("PASSED, %d\n",result);
+
 bst_print_tree(test_tree);
 ENDTEST
 
 TEST(test_tree_search_missing, "Search for a missing key (X)")
 bst_init(&test_tree);
 bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
-int result;
-bst_search(test_tree, 'X', &result);
+int result = 0;
+if(!bst_search(test_tree, 'X', &result))
+  printf("PASSED, %d\n",result);
+
 bst_print_tree(test_tree);
 ENDTEST
 
@@ -169,26 +177,26 @@ printf("\n");
 bst_print_tree(test_tree);
 ENDTEST
 
-int main(int argc, char *argv[]) {
-  init_test();
+// int main(int argc, char *argv[]) {
+//   init_test();
 
-  test_tree_init();
-  test_tree_dispose_empty();
-  test_tree_search_empty();
-  test_tree_insert_root();
-  test_tree_search_root();
-  test_tree_update_root();
-  test_tree_insert_many();
-  test_tree_search();
-  test_tree_search_missing();
-  test_tree_delete_leaf();
-  test_tree_delete_left_subtree();
-  test_tree_delete_right_subtree();
-  test_tree_delete_both_subtrees();
-  test_tree_delete_missing();
-  test_tree_delete_root();
-  test_tree_dispose_filled();
-  test_tree_preorder();
-  test_tree_inorder();
-  test_tree_postorder();
-}
+//   test_tree_init();
+//   test_tree_dispose_empty();
+//   test_tree_search_empty();
+//   test_tree_insert_root();
+//   test_tree_search_root();
+//   test_tree_update_root();
+//   test_tree_insert_many();
+//   test_tree_search();
+//   test_tree_search_missing();
+//   test_tree_delete_leaf();
+//   test_tree_delete_left_subtree();
+//   test_tree_delete_right_subtree();
+//   test_tree_delete_both_subtrees();
+//   test_tree_delete_missing();
+//   test_tree_delete_root();
+//   test_tree_dispose_filled();
+//   test_tree_preorder();
+//   test_tree_inorder();
+//   test_tree_postorder();
+// }
