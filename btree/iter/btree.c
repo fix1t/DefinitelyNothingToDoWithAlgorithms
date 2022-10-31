@@ -7,11 +7,11 @@
  */
 
 #include "../btree.h"
-// #include "../btree.c"
-// #include "../test.c"
-// #include "../test_util.h"
-// #include "../test_util.c"
-// #include "stack.c"
+#include "../btree.c"
+#include "../test.c"
+#include "../test_util.h"
+#include "../test_util.c"
+#include "stack.c"
 
 #include "stack.h"
 #include <stdio.h>
@@ -148,10 +148,12 @@ void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
   bst_node_t *prev = tree[0];//previous node
   while (cur!=NULL)
   {
-    prev=cur;//catch previous
-    if(cur->right != NULL)//found nod with same key
+    if(cur->right != NULL) // there is left node
+    {
+      prev=cur;//catch previous
       cur = cur->right;
-    else
+    }
+    else //there is not another left node
       break;
   }
   if (cur->left!=NULL)//cur is not a leaf
@@ -159,6 +161,7 @@ void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
 
   target->key=cur->key;
   target->value=cur->value;
+  prev->right =NULL;
   free(cur);  
 }
 
@@ -175,6 +178,74 @@ void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
  * použitia vlastných pomocných funkcií.
  */
 void bst_delete(bst_node_t **tree, char key) {
+  bst_node_t *cur = tree[0];
+  bst_node_t *prev = cur;
+  bool isLeft = false;
+  
+  if (key == cur->key) // root
+  {
+    bst_replace_by_rightmost(cur,&cur->left); //replace by rightmost
+    tree[0]->key = cur->key;
+    tree[0]->value = cur->value;
+    return;
+  }
+  
+  
+  //search
+  while (cur!=NULL)
+  {
+    if(key == cur->key)//found nod with same key
+    {
+      if((cur->left == NULL && cur->right == NULL)) // no children
+      {
+        if(isLeft)
+          prev->left =NULL;
+        else 
+          prev->right = NULL;
+        free(cur);
+      }
+      else if (cur->left != NULL && cur->right != NULL) //2 children
+      {
+        bst_replace_by_rightmost(cur,&cur->left); //replace by rightmost
+        if (isLeft)
+          prev->left = cur;
+        else  
+          prev->right = cur;
+      }       
+      else //1 children
+      {
+        if(cur->left != NULL) //has left subtree
+        {
+          if (isLeft)
+            prev->left=cur->left;
+          else  
+            prev->right=cur->left;
+        }
+        else  //has right subtree
+        {
+          if (isLeft)
+            prev->left=cur->right;
+          else  
+            prev->right=cur->right;
+        }
+      }
+    return;
+    }
+
+    prev  = cur;//keep previous node
+
+    if (key < cur->key)//go left, value is lesser
+    {
+      cur=cur->left;
+      isLeft = true;
+      continue;
+    }
+    if (key > cur->key)//go right, value is greater
+    {
+      cur=cur->right;
+      isLeft = false;
+    }  
+  }
 }
 
 /*
@@ -268,7 +339,6 @@ void bst_leftmost_preorder(bst_node_t *tree, stack_bst_t *to_visit) {
  * zásobníku uzlov bez použitia vlastných pomocných funkcií.
  */
 void bst_preorder(bst_node_t *tree) {
-  
 }
 
 /*
@@ -324,28 +394,27 @@ void bst_postorder(bst_node_t *tree) {
 
 
 
-// int main(int argc, char const *argv[])
-// {
-//   const int base_data_count = 15;
-//   const char base_keys[] = {'H', 'D', 'L', 'B', 'F', 'J', 'N', 'A',
-//                             'C', 'E', 'G', 'I', 'K', 'M', 'O'};
-//   const int base_values[] = {8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 16};
+int main(int argc, char const *argv[])
+{
+  const int base_data_count = 15;
+  const char base_keys[] = {'H', 'D', 'L', 'B', 'F', 'J', 'N', 'A',
+                            'C', 'E', 'G', 'I', 'K', 'M', 'O'};
+  const int base_values[] = {8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 16};
 
-//   const int additional_data_count = 6;
-//   const char additional_keys[] = {'S', 'R', 'Q', 'P', 'X', 'Y', 'Z'};
-//   const int additional_values[] = {10, 10, 10, 10, 10, 10};
+  const int additional_data_count = 6;
+  const char additional_keys[] = {'S', 'R', 'Q', 'P', 'X', 'Y', 'Z'};
+  const int additional_values[] = {10, 10, 10, 10, 10, 10};
 
-//   const int traversal_data_count = 5;
-//   const char traversal_keys[] = {'D', 'B', 'A', 'C', 'E'};
-//   const int traversal_values[] = {1, 2, 3, 4, 5};
+  const int traversal_data_count = 5;
+  const char traversal_keys[] = {'D', 'B', 'A', 'C', 'E'};
+  const int traversal_values[] = {1, 2, 3, 4, 5};
   
-//   bst_node_t *test_tree = NULL;
+  bst_node_t *test_tree = NULL;
   
-//   bst_init(&test_tree);
-//   bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
-//   bst_print_tree(test_tree);
-//   printf("\n");                                                                
-//   bst_dispose(&test_tree);                                                     
-
-//   return 0;
-// }
+bst_init(&test_tree);
+bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
+bst_print_tree(test_tree);
+bst_delete(&test_tree, 'H');
+bst_print_tree(test_tree);
+  return 0;
+}
