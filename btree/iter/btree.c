@@ -6,13 +6,13 @@
  * strom bez použitia rekurzie.
  */
 
-#include "../btree.h"
-#include "../btree.c"
-#include "../test.c"
-#include "../test_util.h"
-#include "../test_util.c"
-#include "stack.c"
+// #include "../btree.c"
+// #include "../test.c"
+// #include "../test_util.h"
+// #include "../test_util.c"
+// #include "stack.c"
 
+#include "../btree.h"
 #include "stack.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -394,27 +394,32 @@ void bst_postorder(bst_node_t *tree) {
 
 
 
-int main(int argc, char const *argv[])
-{
-  const int base_data_count = 15;
-  const char base_keys[] = {'H', 'D', 'L', 'B', 'F', 'J', 'N', 'A',
-                            'C', 'E', 'G', 'I', 'K', 'M', 'O'};
-  const int base_values[] = {8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 16};
+// int main(int argc, char const *argv[])
+// {
+//   const int base_data_count = 15;
+//   const char base_keys[] = {'H', 'D', 'L', 'B', 'F', 'J', 'N', 'A',
+//                             'C', 'E', 'G', 'I', 'K', 'M', 'O'};
+//   const int base_values[] = {8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 16};
 
-  const int additional_data_count = 6;
-  const char additional_keys[] = {'S', 'R', 'Q', 'P', 'X', 'Y', 'Z'};
-  const int additional_values[] = {10, 10, 10, 10, 10, 10};
+//   const int additional_data_count = 6;
+//   const char additional_keys[] = {'S', 'R', 'Q', 'P', 'X', 'Y', 'Z'};
+//   const int additional_values[] = {10, 10, 10, 10, 10, 10};
 
-  const int traversal_data_count = 5;
-  const char traversal_keys[] = {'D', 'B', 'A', 'C', 'E'};
-  const int traversal_values[] = {1, 2, 3, 4, 5};
+//   const int traversal_data_count = 5;
+//   const char traversal_keys[] = {'D', 'B', 'A', 'C', 'E'};
+//   const int traversal_values[] = {1, 2, 3, 4, 5};
   
-  bst_node_t *test_tree = NULL;
+//   bst_node_t *test_tree = NULL;
   
-bst_init(&test_tree);
-bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
-bst_print_tree(test_tree);
-bst_delete(&test_tree, 'H');
-bst_print_tree(test_tree);
-  return 0;
-}
+// bst_init(&test_tree);
+// bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
+// bst_print_tree(test_tree);
+// bst_delete(&test_tree, 'U');
+// bst_print_tree(test_tree);
+
+// bst_print_node(test_tree);
+
+
+// bst_dispose(&test_tree);
+//   return 0;
+// }
