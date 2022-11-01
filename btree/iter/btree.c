@@ -148,7 +148,7 @@ void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
   bst_node_t *prev = tree[0];//previous node
   while (cur!=NULL)
   {
-    if(cur->right != NULL) // there is left node
+    if(cur->right != NULL) 
     {
       prev=cur;//catch previous
       cur = cur->right;

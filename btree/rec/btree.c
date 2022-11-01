@@ -9,6 +9,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../btree.c"
+#include "../test.c"
+#include "../test_util.h"
+#include "../test_util.c"
+
 /*
  * Inicializácia stromu.
  *
@@ -18,6 +23,7 @@
  * možné toto detegovať vo funkcii.
  */
 void bst_init(bst_node_t **tree) {
+  *tree = NULL;
 }
 
 /*
@@ -30,7 +36,25 @@ void bst_init(bst_node_t **tree) {
  * Funkciu implementujte rekurzívne bez použitia vlastných pomocných funkcií.
  */
 bool bst_search(bst_node_t *tree, char key, int *value) {
-  return false;
+  if (tree == NULL)
+    return false;
+  if (tree->key == key) // found it
+  {
+    *value = tree->value;
+    return true;
+  }  
+  else if (tree->key < key) // go left
+  {
+    if (tree->left != NULL) //is there another?
+      return bst_search(tree->left,key,value);
+    return false;
+  }
+  else //go right
+  {
+    if (tree->right != NULL) //is there another?
+      return bst_search(tree->right,key,value);
+    return false;
+  }  
 }
 
 /*
@@ -45,6 +69,49 @@ bool bst_search(bst_node_t *tree, char key, int *value) {
  * Funkciu implementujte rekurzívne bez použitia vlastných pomocných funkcií.
  */
 void bst_insert(bst_node_t **tree, char key, int value) {
+  if (tree == NULL)
+    return;
+  if (tree[0] == NULL)//empty
+  {
+    bst_node_t * new = malloc(sizeof(bst_node_t));
+    new->left=NULL;
+    new->right=NULL;
+    new->key=key;
+    new->value=value;
+    tree[0] = new;  
+  }
+
+  if (tree[0]->key == key) // found it
+  {
+    tree[0]->value=value;
+  }
+
+  else if (tree[0]->key > key) // go left
+  {
+    if (tree[0]->left != NULL) //is there another?
+      return bst_insert(&tree[0]->left,key,value);
+    //insert
+    bst_node_t * new = malloc(sizeof(bst_node_t));
+    new->left=NULL;
+    new->right=NULL;
+    new->key=key;
+    new->value=value;
+    tree[0]->left = new;
+    return;
+  }
+  else //go right
+  {
+    if (tree[0]->right != NULL) //is there another?
+      return bst_insert(&tree[0]->right,key,value);
+    //insert
+    bst_node_t * new = malloc(sizeof(bst_node_t));
+    new->left=NULL;
+    new->right=NULL;
+    new->key=key;
+    new->value=value;
+    tree[0]->right = new;
+    return;
+  }
 }
 
 /*
@@ -61,6 +128,21 @@ void bst_insert(bst_node_t **tree, char key, int value) {
  * Funkciu implementujte rekurzívne bez použitia vlastných pomocných funkcií.
  */
 void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
+  if (tree[0]->right == NULL) // root.
+  {
+    target->key = tree[0]->key;
+    target->value = tree[0]->value;
+    //delete me 
+    if (tree[0]->left != NULL) // 1 sibling
+    {
+      bst_node_t *cur =tree[0];
+      /* THIS BAD */
+      tree[0]=tree[0]->left;  
+      free(cur);
+    }
+    return;    
+  }
+  bst_replace_by_rightmost(target,&tree[0]->right);
 }
 
 /*
@@ -76,6 +158,28 @@ void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
  * použitia vlastných pomocných funkcií.
  */
 void bst_delete(bst_node_t **tree, char key) {
+  if (tree==NULL)
+    return;
+  if (tree[0]==NULL)
+    return;
+  if (tree[0]->key == key) // found it 
+  {
+    
+  }
+  
+  
+  if (tree[0]->left != NULL) //dell left
+    bst_dispose(&tree[0]->left);
+  
+  if (tree[0]->right != NULL) //dell right
+    bst_dispose(&tree[0]->right);
+  
+  free(tree[0]); //free me
+  
+  tree[0]=NULL; //set me to null
+  return;
+
+
 }
 
 /*
@@ -88,6 +192,21 @@ void bst_delete(bst_node_t **tree, char key) {
  * Funkciu implementujte rekurzívne bez použitia vlastných pomocných funkcií.
  */
 void bst_dispose(bst_node_t **tree) {
+  if (tree==NULL)
+    return;
+  if (tree[0]==NULL)
+    return;
+  
+  if (tree[0]->left != NULL) //dell left
+    bst_dispose(&tree[0]->left);
+  
+  if (tree[0]->right != NULL) //dell right
+    bst_dispose(&tree[0]->right);
+  
+  free(tree[0]); //free me
+  
+  tree[0]=NULL; //set me to null
+  return;
 }
 
 /*
@@ -117,4 +236,39 @@ void bst_inorder(bst_node_t *tree) {
  * Funkciu implementujte rekurzívne bez použitia vlastných pomocných funkcií.
  */
 void bst_postorder(bst_node_t *tree) {
+}
+
+
+
+int main(int argc, char const *argv[])
+{
+  const int base_data_count = 15;
+  const char base_keys[] = {'H', 'D', 'L', 'B', 'F', 'J', 'N', 'A',
+                            'C', 'E', 'G', 'I', 'K', 'M'};
+  const int base_values[] = {8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13};
+
+  const int additional_data_count = 6;
+  const char additional_keys[] = {'S', 'R', 'Q', 'P', 'X', 'Y', 'Z'};
+  const int additional_values[] = {10, 10, 10, 10, 10, 10};
+
+  const int traversal_data_count = 5;
+  const char traversal_keys[] = {'D', 'B', 'A', 'C', 'E'};
+  const int traversal_values[] = {1, 2, 3, 4, 5};
+  
+  bst_node_t *test_tree = NULL;
+  bst_node_t * new = malloc(sizeof(bst_node_t));
+  new->key='J';
+  new->value=0;
+  new->left=NULL;
+  new->right=NULL;
+  int x = 0;
+  bst_init(&test_tree);
+  bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
+  bst_print_tree(test_tree);
+
+
+
+  bst_dispose(&test_tree);
+  free(new);
+  return 0;
 }
