@@ -177,26 +177,26 @@ printf("\n");
 bst_print_tree(test_tree);
 ENDTEST
 
-int main(int argc, char *argv[]) {
-  init_test();
+// int main(int argc, char *argv[]) {
+//   init_test();
 
-  test_tree_init();
-  test_tree_dispose_empty();
-  test_tree_search_empty();
-  test_tree_insert_root();
-  test_tree_search_root();
-  test_tree_update_root();
-  test_tree_insert_many();
-  test_tree_search();
-  test_tree_search_missing();
-  test_tree_delete_leaf();
-  test_tree_delete_left_subtree();
-  test_tree_delete_right_subtree();
-  test_tree_delete_both_subtrees();
-  test_tree_delete_missing();
-  test_tree_delete_root();
-  test_tree_dispose_filled();
-  test_tree_preorder();
-  test_tree_inorder();
-  test_tree_postorder();
-}
+//   test_tree_init();
+//   test_tree_dispose_empty();
+//   test_tree_search_empty();
+//   test_tree_insert_root();
+//   test_tree_search_root();
+//   test_tree_update_root();
+//   test_tree_insert_many();
+//   test_tree_search();
+//   test_tree_search_missing();
+//   test_tree_delete_leaf();
+//   test_tree_delete_left_subtree();
+//   test_tree_delete_right_subtree();
+//   test_tree_delete_both_subtrees();
+//   test_tree_delete_missing();
+//   test_tree_delete_root();
+//   test_tree_dispose_filled();
+//   test_tree_preorder();
+//   test_tree_inorder();
+//   test_tree_postorder();
+// }
