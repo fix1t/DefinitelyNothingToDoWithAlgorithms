@@ -27,7 +27,9 @@ ENDTEST
 
 TEST(test_search_nonexist, "Search for a non-existing item")
 ht_init(test_table);
-ht_search(test_table, "Ethereum");
+if (NULL == ht_search(test_table, "Ethereum"))
+  printf("SUCCESS");
+
 ENDTEST
 
 TEST(test_insert_simple, "Insert a new item")
@@ -38,7 +40,8 @@ ENDTEST
 TEST(test_search_exist, "Search for an existing item")
 ht_init(test_table);
 ht_insert(test_table, "Ethereum", 3208.67);
-ht_search(test_table, "Ethereum");
+if (NULL != ht_search(test_table, "Ethereum"))
+  printf("SUCCESS");
 ENDTEST
 
 TEST(test_insert_many, "Insert many new items")
@@ -49,7 +52,13 @@ ENDTEST
 TEST(test_search_collision, "Search for an item with colliding hash")
 ht_init(test_table);
 INSERT_TEST_DATA(test_table)
-ht_search(test_table, "Terra");
+// test_table[0][0]->next = malloc(sizeof(ht_item_t)); //create
+// test_table[0][0]->next->key="NULL";
+// test_table[0][0]->next->value=1;
+// test_table[0][0]->next->next=NULL;
+if (NULL != ht_search(test_table, "Terra"))
+  printf("SUCCESS");
+
 ENDTEST
 
 TEST(test_insert_update, "Update an item")
@@ -61,7 +70,8 @@ ENDTEST
 TEST(test_get, "Get an item's value")
 ht_init(test_table);
 INSERT_TEST_DATA(test_table)
-ht_get(test_table, "Ethereum");
+printf("%f",*ht_get(test_table, "Avalanche"));
+
 ENDTEST
 
 TEST(test_delete, "Delete an item")
