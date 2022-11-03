@@ -9,10 +9,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../btree.c"
-#include "../test.c"
-#include "../test_util.h"
-#include "../test_util.c"
+// #include "../btree.c"
+// #include "../test.c"
+// #include "../test_util.h"
+// #include "../test_util.c"
 
 /*
  * Inicializácia stromu.
@@ -90,7 +90,10 @@ void bst_insert(bst_node_t **tree, char key, int value) {
   else if (tree[0]->key > key) // go left
   {
     if (tree[0]->left != NULL) //is there another?
-      return bst_insert(&tree[0]->left,key,value);
+    {
+      bst_insert(&tree[0]->left,key,value);
+      return;
+    }
     //insert
     bst_node_t * new = malloc(sizeof(bst_node_t));
     new->left=NULL;
@@ -103,7 +106,10 @@ void bst_insert(bst_node_t **tree, char key, int value) {
   else //go right
   {
     if (tree[0]->right != NULL) //is there another?
-      return bst_insert(&tree[0]->right,key,value);
+    {
+      bst_insert(&tree[0]->right,key,value);
+      return;
+    }
     //insert
     bst_node_t * new = malloc(sizeof(bst_node_t));
     new->left=NULL;
@@ -260,36 +266,4 @@ void bst_postorder(bst_node_t *tree) {
   bst_postorder(tree->left); //first left
   bst_postorder(tree->right);
   bst_print_node(tree); // print node
-}
-
-
-int main(int argc, char const *argv[])
-{
-  const int base_data_count = 15;
-  const char base_keys[] = {'H', 'D', 'L', 'B', 'F', 'J', 'N', 'A',
-                            'C', 'E', 'G', 'I', 'K', 'M','O'};
-  const int base_values[] = {8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13,14};
-
-  const int additional_data_count = 6;
-  const char additional_keys[] = {'S', 'R', 'Q', 'P', 'X', 'Y', 'Z'};
-  const int additional_values[] = {10, 10, 10, 10, 10, 10};
-
-  const int traversal_data_count = 5;
-  const char traversal_keys[] = {'D', 'B', 'A', 'C', 'E'};
-  const int traversal_values[] = {1, 2, 3, 4, 5};
-  
-  bst_node_t *test_tree = NULL;
-  bst_node_t * new = malloc(sizeof(bst_node_t));
-  new->key='Z';
-  new->value=0;
-  new->left=NULL;
-  new->right=NULL;
-  int x = 0;
-  bst_init(&test_tree);
-  bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
-  bst_postorder(test_tree);
-
-  bst_dispose(&test_tree);
-  free(new);
-  return 0;
 }
