@@ -68,6 +68,7 @@ bool bst_search(bst_node_t *tree, char key, int *value) {
  *
  * Funkciu implementujte rekurzívne bez použitia vlastných pomocných funkcií.
  */
+//po vymazani O cka pise divny subtree 
 void bst_insert(bst_node_t **tree, char key, int value) {
   if (tree == NULL)
     return;
@@ -128,21 +129,36 @@ void bst_insert(bst_node_t **tree, char key, int value) {
  * Funkciu implementujte rekurzívne bez použitia vlastných pomocných funkcií.
  */
 void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
-  if (tree[0]->right == NULL) // root.
+  if (tree[0]->right == NULL) //root
   {
     target->key = tree[0]->key;
     target->value = tree[0]->value;
-    //delete me 
     if (tree[0]->left != NULL) // 1 sibling
     {
       bst_node_t *cur =tree[0];
-      /* THIS BAD */
-      tree[0]=tree[0]->left;  
-      free(cur);
+      tree[0]=cur->left; // new root
+      free(cur); //free root
     }
+    else  
+      tree[0]->right = NULL;
     return;    
   }
-  bst_replace_by_rightmost(target,&tree[0]->right);
+  if (tree[0]->right->right == NULL) //found the rightmost performed 1 level lower 
+  {
+    target->key = tree[0]->right->key;
+    target->value = tree[0]->right->value;
+    if (tree[0]->right->left != NULL) // has left child
+    {
+      bst_node_t *cur =tree[0]->right; //save - to be deleted
+      tree[0]->right = tree[0]->right->left;  
+      free(cur);
+    }
+    else
+      tree[0]->right = NULL;
+    return;   
+  }
+  else
+    bst_replace_by_rightmost(target,&tree[0]->right);
 }
 
 /*
@@ -244,8 +260,8 @@ int main(int argc, char const *argv[])
 {
   const int base_data_count = 15;
   const char base_keys[] = {'H', 'D', 'L', 'B', 'F', 'J', 'N', 'A',
-                            'C', 'E', 'G', 'I', 'K', 'M'};
-  const int base_values[] = {8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13};
+                            'C', 'E', 'G', 'I', 'K', 'M','O'};
+  const int base_values[] = {8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13,14};
 
   const int additional_data_count = 6;
   const char additional_keys[] = {'S', 'R', 'Q', 'P', 'X', 'Y', 'Z'};
@@ -257,16 +273,26 @@ int main(int argc, char const *argv[])
   
   bst_node_t *test_tree = NULL;
   bst_node_t * new = malloc(sizeof(bst_node_t));
-  new->key='J';
+  new->key='Z';
   new->value=0;
   new->left=NULL;
   new->right=NULL;
   int x = 0;
   bst_init(&test_tree);
   bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
+  bst_replace_by_rightmost(new, &test_tree);
+  bst_replace_by_rightmost(new, &test_tree);
+  bst_replace_by_rightmost(new, &test_tree);
+  bst_replace_by_rightmost(new, &test_tree);
+  bst_replace_by_rightmost(new, &test_tree);
+  bst_replace_by_rightmost(new, &test_tree);
+  bst_replace_by_rightmost(new, &test_tree);
+  bst_replace_by_rightmost(new, &test_tree);
+  bst_replace_by_rightmost(new, &test_tree);
+  bst_replace_by_rightmost(new, &test_tree);
+  bst_replace_by_rightmost(new, &test_tree);
   bst_print_tree(test_tree);
-
-
+  bst_print_node(new);
 
   bst_dispose(&test_tree);
   free(new);
