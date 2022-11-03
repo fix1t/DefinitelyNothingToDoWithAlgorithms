@@ -129,6 +129,8 @@ void bst_insert(bst_node_t **tree, char key, int value) {
  * Funkciu implementujte rekurzívne bez použitia vlastných pomocných funkcií.
  */
 void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
+  if(tree[0]== NULL)
+    return;
   if (tree[0]->right == NULL) //root
   {
     target->key = tree[0]->key;
@@ -139,8 +141,12 @@ void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
       tree[0]=cur->left; // new root
       free(cur); //free root
     }
-    else  
-      tree[0]->right = NULL;
+    else  //only 1 node as tree 
+    {
+      bst_node_t *cur =tree[0];
+      tree[0] = NULL; 
+      free(cur); //free root
+    }
     return;    
   }
   if (tree[0]->right->right == NULL) //found the rightmost performed 1 level lower 
@@ -149,12 +155,16 @@ void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
     target->value = tree[0]->right->value;
     if (tree[0]->right->left != NULL) // has left child
     {
-      bst_node_t *cur =tree[0]->right; //save - to be deleted
+      bst_node_t *cur = tree[0]->right; //save - to be deleted
       tree[0]->right = tree[0]->right->left;  
       free(cur);
     }
     else
+    {
+      bst_node_t *cur = tree[0]->right; //save - to be deleted
       tree[0]->right = NULL;
+      free(cur);
+    }
     return;   
   }
   else
@@ -178,24 +188,32 @@ void bst_delete(bst_node_t **tree, char key) {
     return;
   if (tree[0]==NULL)
     return;
+  
   if (tree[0]->key == key) // found it 
   {
-    
+    if (tree[0]->right == NULL && tree[0]->left == NULL) //no children
+    {
+      bst_replace_by_rightmost(tree[0],&tree[0]);
+    }
+    else if (tree[0]->right != NULL && tree[0]->left != NULL)//2 children
+    {
+      bst_replace_by_rightmost(tree[0],&tree[0]);
+    }
+    else//1 children 
+    {
+      bst_node_t *cur = (*tree);
+      if((*tree)->right)
+        *tree = (*tree)->right; //attach to parent
+          else
+        *tree = (*tree)->left;
+      free(cur);//delete 
+    }
   }
-  
-  
-  if (tree[0]->left != NULL) //dell left
-    bst_dispose(&tree[0]->left);
-  
-  if (tree[0]->right != NULL) //dell right
-    bst_dispose(&tree[0]->right);
-  
-  free(tree[0]); //free me
-  
-  tree[0]=NULL; //set me to null
+  else if (tree[0]->key < key) // go left
+    bst_delete(&tree[0]->left,key);
+  else
+    bst_delete(&tree[0]->left,key);
   return;
-
-
 }
 
 /*
@@ -280,17 +298,10 @@ int main(int argc, char const *argv[])
   int x = 0;
   bst_init(&test_tree);
   bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
-  bst_replace_by_rightmost(new, &test_tree);
-  bst_replace_by_rightmost(new, &test_tree);
-  bst_replace_by_rightmost(new, &test_tree);
-  bst_replace_by_rightmost(new, &test_tree);
-  bst_replace_by_rightmost(new, &test_tree);
-  bst_replace_by_rightmost(new, &test_tree);
-  bst_replace_by_rightmost(new, &test_tree);
-  bst_replace_by_rightmost(new, &test_tree);
-  bst_replace_by_rightmost(new, &test_tree);
-  bst_replace_by_rightmost(new, &test_tree);
-  bst_replace_by_rightmost(new, &test_tree);
+  bst_delete(&test_tree,'H');
+  bst_delete(&test_tree,'O');
+  bst_delete(&test_tree,'B');
+  bst_delete(&test_tree,'C');
   bst_print_tree(test_tree);
   bst_print_node(new);
 
