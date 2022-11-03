@@ -129,43 +129,18 @@ void bst_insert(bst_node_t **tree, char key, int value) {
  * Funkciu implementujte rekurzívne bez použitia vlastných pomocných funkcií.
  */
 void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
+  if (tree == NULL)
+    return;
   if(tree[0]== NULL)
     return;
-  if (tree[0]->right == NULL) //root
+
+  if (tree[0]->right == NULL)
   {
     target->key = tree[0]->key;
     target->value = tree[0]->value;
-    if (tree[0]->left != NULL) // 1 sibling
-    {
-      bst_node_t *cur =tree[0];
-      tree[0]=cur->left; // new root
-      free(cur); //free root
-    }
-    else  //only 1 node as tree 
-    {
-      bst_node_t *cur =tree[0];
-      tree[0] = NULL; 
-      free(cur); //free root
-    }
-    return;    
-  }
-  if (tree[0]->right->right == NULL) //found the rightmost performed 1 level lower 
-  {
-    target->key = tree[0]->right->key;
-    target->value = tree[0]->right->value;
-    if (tree[0]->right->left != NULL) // has left child
-    {
-      bst_node_t *cur = tree[0]->right; //save - to be deleted
-      tree[0]->right = tree[0]->right->left;  
-      free(cur);
-    }
-    else
-    {
-      bst_node_t *cur = tree[0]->right; //save - to be deleted
-      tree[0]->right = NULL;
-      free(cur);
-    }
-    return;   
+    bst_node_t *cur =tree[0];
+    tree[0] = cur->left; 
+    free(cur); //free root
   }
   else
     bst_replace_by_rightmost(target,&tree[0]->right);
@@ -201,18 +176,18 @@ void bst_delete(bst_node_t **tree, char key) {
     }
     else//1 children 
     {
-      bst_node_t *cur = (*tree);
-      if((*tree)->right)
-        *tree = (*tree)->right; //attach to parent
+      bst_node_t *cur = tree[0];
+      if(tree[0]->right)
+      tree[0]= tree[0]->right; //attach to parent
           else
-        *tree = (*tree)->left;
+      tree[0]= tree[0]->left;
       free(cur);//delete 
     }
   }
-  else if (tree[0]->key < key) // go left
+  else if (tree[0]->key > key) // go left
     bst_delete(&tree[0]->left,key);
   else
-    bst_delete(&tree[0]->left,key);
+    bst_delete(&tree[0]->right,key);
   return;
 }
 
@@ -298,10 +273,7 @@ int main(int argc, char const *argv[])
   int x = 0;
   bst_init(&test_tree);
   bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
-  bst_delete(&test_tree,'H');
-  bst_delete(&test_tree,'O');
-  bst_delete(&test_tree,'B');
-  bst_delete(&test_tree,'C');
+  bst_delete(&test_tree,'J');
   bst_print_tree(test_tree);
   bst_print_node(new);
 

@@ -27,11 +27,6 @@
  */
 void bst_init(bst_node_t **tree) {
   tree[0]=NULL;
-  // tree[0] = malloc(sizeof(bst_node_t)); //allocate the tree
-  // tree[0]->value;
-  // tree[0]->key='\0';
-  // tree[0]->left=NULL;
-  // tree[0]->right=NULL;
   return;
 }
 
