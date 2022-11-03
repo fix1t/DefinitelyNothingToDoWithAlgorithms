@@ -226,6 +226,11 @@ void bst_dispose(bst_node_t **tree) {
  * Funkciu implementujte rekurzívne bez použitia vlastných pomocných funkcií.
  */
 void bst_preorder(bst_node_t *tree) {
+  if (tree == NULL)
+    return;
+  bst_print_node(tree); // print node
+  bst_preorder(tree->left); //first left
+  bst_preorder(tree->right);
 }
 
 /*
@@ -236,6 +241,11 @@ void bst_preorder(bst_node_t *tree) {
  * Funkciu implementujte rekurzívne bez použitia vlastných pomocných funkcií.
  */
 void bst_inorder(bst_node_t *tree) {
+  if (tree == NULL)
+    return;
+  bst_inorder(tree->left); //first left
+  bst_print_node(tree); // print node
+  bst_inorder(tree->right);
 }
 /*
  * Postorder prechod stromom.
@@ -245,8 +255,12 @@ void bst_inorder(bst_node_t *tree) {
  * Funkciu implementujte rekurzívne bez použitia vlastných pomocných funkcií.
  */
 void bst_postorder(bst_node_t *tree) {
+  if (tree == NULL)
+    return;
+  bst_postorder(tree->left); //first left
+  bst_postorder(tree->right);
+  bst_print_node(tree); // print node
 }
-
 
 
 int main(int argc, char const *argv[])
@@ -273,9 +287,7 @@ int main(int argc, char const *argv[])
   int x = 0;
   bst_init(&test_tree);
   bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
-  bst_delete(&test_tree,'J');
-  bst_print_tree(test_tree);
-  bst_print_node(new);
+  bst_postorder(test_tree);
 
   bst_dispose(&test_tree);
   free(new);
