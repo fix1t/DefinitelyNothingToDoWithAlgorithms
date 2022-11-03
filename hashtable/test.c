@@ -29,7 +29,6 @@ TEST(test_search_nonexist, "Search for a non-existing item")
 ht_init(test_table);
 if (NULL == ht_search(test_table, "Ethereum"))
   printf("SUCCESS");
-
 ENDTEST
 
 TEST(test_insert_simple, "Insert a new item")
@@ -77,7 +76,7 @@ ENDTEST
 TEST(test_delete, "Delete an item")
 ht_init(test_table);
 INSERT_TEST_DATA(test_table)
-ht_delete(test_table, "Terra");
+ht_delete(test_table, "USD Coin");
 ENDTEST
 
 TEST(test_delete_all, "Delete all the items")

@@ -34,7 +34,6 @@ int get_hash(char *key) {
 void ht_init(ht_table_t *table) {
   for (int i = 0; i < HT_SIZE; i++)
     table[0][i]= NULL;
-  
 }
 
 /*
