@@ -118,13 +118,13 @@ bst_delete(&test_tree, 'X');
 bst_print_tree(test_tree);
 ENDTEST
 
-TEST(test_tree_delete_both_subtrees, "Delete a node with both subtrees (L)")
+TEST(test_tree_delete_both_subtrees, "Delete a node with both subtrees (L) (sub is without K)")
 bst_init(&test_tree);
 bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
-bst_insert_many(&test_tree, additional_keys, additional_values,
-                additional_data_count);
+bst_insert_many(&test_tree, additional_keys, additional_values,additional_data_count);
 
 bst_print_tree(test_tree);
+bst_delete(&test_tree, 'K');
 bst_delete(&test_tree, 'L');
 bst_print_tree(test_tree);
 ENDTEST
@@ -156,6 +156,7 @@ ENDTEST
 TEST(test_tree_preorder, "Traverse the tree using preorder")
 bst_init(&test_tree);
 bst_insert_many(&test_tree, traversal_keys, traversal_values, traversal_data_count);
+bst_insert_many(&test_tree, additional_keys, additional_values,additional_data_count);
 bst_preorder(test_tree);
 printf("\n");
 bst_print_tree(test_tree);
@@ -164,6 +165,7 @@ ENDTEST
 TEST(test_tree_inorder, "Traverse the tree using inorder")
 bst_init(&test_tree);
 bst_insert_many(&test_tree, traversal_keys, traversal_values, traversal_data_count);
+bst_insert_many(&test_tree, additional_keys, additional_values,additional_data_count);
 bst_inorder(test_tree);
 printf("\n");
 bst_print_tree(test_tree);
@@ -172,6 +174,7 @@ ENDTEST
 TEST(test_tree_postorder, "Traverse the tree using postorder")
 bst_init(&test_tree);
 bst_insert_many(&test_tree, traversal_keys, traversal_values, traversal_data_count);
+bst_insert_many(&test_tree, additional_keys, additional_values,additional_data_count);
 bst_postorder(test_tree);
 printf("\n");
 bst_print_tree(test_tree);

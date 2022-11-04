@@ -183,7 +183,7 @@ void bst_delete(bst_node_t **tree, char key) {
     else//1 children 
     {
       bst_node_t *cur = tree[0];
-      if(tree[0]->right)
+      if(tree[0]->right != NULL)
       tree[0]= tree[0]->right; //attach to parent
           else
       tree[0]= tree[0]->left;
