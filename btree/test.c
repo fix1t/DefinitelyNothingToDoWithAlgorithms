@@ -32,11 +32,8 @@ ENDTEST
 
 TEST(test_tree_search_empty, "Search in an empty tree (A)")
 bst_init(&test_tree);
-int result = 0;
-if(!bst_search(test_tree, 'A', &result))
-{
-  printf("PASSED");
-}
+int result;
+bst_search(test_tree, 'A', &result);
 ENDTEST
 
 TEST(test_tree_insert_root, "Insert an item (H,1)")
@@ -48,9 +45,8 @@ ENDTEST
 TEST(test_tree_search_root, "Search in a single node tree (H)")
 bst_init(&test_tree);
 bst_insert(&test_tree, 'H', 1);
-int result = 0;
-if(bst_search(test_tree, 'H', &result))
-  printf("PASSED, %d\n",result);
+int result;
+bst_search(test_tree, 'H', &result);
 bst_print_tree(test_tree);
 ENDTEST
 
@@ -71,20 +67,16 @@ ENDTEST
 TEST(test_tree_search, "Search for an item deeper in the tree (A)")
 bst_init(&test_tree);
 bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
-int result = 0;
-if(bst_search(test_tree, 'A', &result))
-  printf("PASSED, %d\n",result);
-
+int result;
+bst_search(test_tree, 'A', &result);
 bst_print_tree(test_tree);
 ENDTEST
 
 TEST(test_tree_search_missing, "Search for a missing key (X)")
 bst_init(&test_tree);
 bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
-int result = 0;
-if(!bst_search(test_tree, 'X', &result))
-  printf("PASSED, %d\n",result);
-
+int result;
+bst_search(test_tree, 'X', &result);
 bst_print_tree(test_tree);
 ENDTEST
 
@@ -118,13 +110,13 @@ bst_delete(&test_tree, 'X');
 bst_print_tree(test_tree);
 ENDTEST
 
-TEST(test_tree_delete_both_subtrees, "Delete a node with both subtrees (L) (sub is without K)")
+TEST(test_tree_delete_both_subtrees, "Delete a node with both subtrees (L)")
 bst_init(&test_tree);
 bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
-bst_insert_many(&test_tree, additional_keys, additional_values,additional_data_count);
+bst_insert_many(&test_tree, additional_keys, additional_values,
+                additional_data_count);
 
 bst_print_tree(test_tree);
-bst_delete(&test_tree, 'K');
 bst_delete(&test_tree, 'L');
 bst_print_tree(test_tree);
 ENDTEST
@@ -145,6 +137,19 @@ bst_delete(&test_tree, 'H');
 bst_print_tree(test_tree);
 ENDTEST
 
+TEST(test_tree_delete_both_subtrees_parent,
+     "Delete a node with both subtrees while moving a parent (F, H)")
+bst_init(&test_tree);
+bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
+bst_insert_many(&test_tree, additional_keys, additional_values,
+                additional_data_count);
+
+bst_delete(&test_tree, 'G');
+bst_print_tree(test_tree);
+bst_delete(&test_tree, 'H');
+bst_print_tree(test_tree);
+ENDTEST
+
 TEST(test_tree_dispose_filled, "Dispose the whole tree")
 bst_init(&test_tree);
 bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
@@ -155,8 +160,8 @@ ENDTEST
 
 TEST(test_tree_preorder, "Traverse the tree using preorder")
 bst_init(&test_tree);
-bst_insert_many(&test_tree, traversal_keys, traversal_values, traversal_data_count);
-bst_insert_many(&test_tree, additional_keys, additional_values,additional_data_count);
+bst_insert_many(&test_tree, traversal_keys, traversal_values,
+                traversal_data_count);
 bst_preorder(test_tree);
 printf("\n");
 bst_print_tree(test_tree);
@@ -164,8 +169,8 @@ ENDTEST
 
 TEST(test_tree_inorder, "Traverse the tree using inorder")
 bst_init(&test_tree);
-bst_insert_many(&test_tree, traversal_keys, traversal_values, traversal_data_count);
-bst_insert_many(&test_tree, additional_keys, additional_values,additional_data_count);
+bst_insert_many(&test_tree, traversal_keys, traversal_values,
+                traversal_data_count);
 bst_inorder(test_tree);
 printf("\n");
 bst_print_tree(test_tree);
@@ -173,8 +178,8 @@ ENDTEST
 
 TEST(test_tree_postorder, "Traverse the tree using postorder")
 bst_init(&test_tree);
-bst_insert_many(&test_tree, traversal_keys, traversal_values, traversal_data_count);
-bst_insert_many(&test_tree, additional_keys, additional_values,additional_data_count);
+bst_insert_many(&test_tree, traversal_keys, traversal_values,
+                traversal_data_count);
 bst_postorder(test_tree);
 printf("\n");
 bst_print_tree(test_tree);
@@ -196,6 +201,7 @@ int main(int argc, char *argv[]) {
   test_tree_delete_left_subtree();
   test_tree_delete_right_subtree();
   test_tree_delete_both_subtrees();
+  test_tree_delete_both_subtrees_parent();
   test_tree_delete_missing();
   test_tree_delete_root();
   test_tree_dispose_filled();

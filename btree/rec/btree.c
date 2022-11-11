@@ -23,7 +23,7 @@
  * možné toto detegovať vo funkcii.
  */
 void bst_init(bst_node_t **tree) {
-  *tree = NULL;
+  tree[0] = NULL;
 }
 
 /*
@@ -178,7 +178,7 @@ void bst_delete(bst_node_t **tree, char key) {
     }
     else if (tree[0]->right != NULL && tree[0]->left != NULL)//2 children
     {
-      bst_replace_by_rightmost(tree[0],&tree[0]);
+      bst_replace_by_rightmost(tree[0],&tree[0]->left);
     }
     else//1 children 
     {

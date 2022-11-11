@@ -70,12 +70,13 @@ void ht_insert(ht_table_t *table, char *key, float value) {
   if (item == NULL) // key doesnt exists in the table
   {
     int hash = get_hash(key);
-    item = table[0][hash]; //cur
 
     ht_item_t *new = malloc(sizeof(ht_item_t)); //create new
     new->key=key;
     new->value=value;
-    new->next=NULL;
+    new->next=table[0][hash];
+    table[0][hash] = new; //cur
+
 
     if (item == NULL) //attach 
     {
